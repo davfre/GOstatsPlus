@@ -1,24 +1,9 @@
-<!-- 
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{GOstatsPlus}
--->
-
-Use GOstats to test for over-represented GO terms
-========================================================
-
-```{r}
+## ------------------------------------------------------------------------
 library(GOstats)
 library(GSEABase)
 library(GOstatsPlus)
-```
 
-### Create gene set
-Create a GOstat gene set collection (gsc) object based on a text file having
-the format gene_id\tGO_id\tDescription\n (e.g .annot file export from Blast2GO)
-
-This is a bit time consuming, so do save the R object for later reuse
-
-```{r}
+## ------------------------------------------------------------------------
 if(file.exists("organism_gsc.rda")){
   load(file="organism_gsc.rda")
 }else{
@@ -27,33 +12,22 @@ if(file.exists("organism_gsc.rda")){
   save(GO_gsc, file = "organism_gsc.rda")
 }
 
-```
 
-### Perform test
-Genes of interest vs all genes that have any GO annotation (default)
-Perform tests for over-represented (default) biological process, molecular function and cellular component terms:
-
-```{r}
+## ------------------------------------------------------------------------
 gene_IDs_of_interest = head(unique(unlist(geneIds(GO_gsc))),500)
 
 GO_BP = test_GO(gene_IDs_of_interest, ontology = "BP", gsc=GO_gsc, pval = 0.01)
 GO_MF = test_GO(gene_IDs_of_interest, ontology = "MF", gsc=GO_gsc, pval = 0.01)
 GO_CC = test_GO(gene_IDs_of_interest, ontology = "CC", gsc=GO_gsc, pval = 0.01)
-```
 
-### View results
-```{r}
+## ------------------------------------------------------------------------
 head(summary(GO_BP))
 head(summary(GO_MF))
 head(summary(GO_CC))
-```
 
-### Export list of significant term
-E.g. for import/visualization in REViGO (http://revigo.irb.hr)
-
-```{r}
+## ------------------------------------------------------------------------
 go_terms = unlist(lapply(c(GO_BP, GO_MF, GO_CC),
                          function(d){significant_terms(d, cutoff = 0.01)}
                   ))
 write.table(go_terms, file = "go_terms.significant.txt",quote=FALSE)
-```
+

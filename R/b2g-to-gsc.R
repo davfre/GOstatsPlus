@@ -1,17 +1,27 @@
-#' @title b2g_to_gsc
+#' Blast2GO to GSC
 #'
-#' @description
-#' \code{b2g_to_gsc} converts a tab-delimited text file to a GOstat gsc object
+#' converts a tab-delimited text file to a GOstat gsc object
 #'
-#' @details
-#' Input file format: geneId GOId geneDesc (tab separated)
+#' @param file Tab separated text: gene_id GO_accession GO_description
+#' @param organism The name of your organism
+#' 
+#' @return A GSEA GeneSetCollection object
+#'
+#' @keywords GO, GSEA, Blast2GO
+#'   
+#' @export
+#' 
+#' @examples
+#' GO_gsc = b2g_to_gsc(file="myBlast2GO.annot",organism="myOrganism")
 
 b2g_to_gsc = function(file, organism="my-organism"){
   blast2GOannot = read.table(file=file, sep="\t", fill=TRUE)
-  colnames(blast2GOannot)<-c("Seq","GO","desc")
+  colnames(blast2GOannot)<-c("Seq", "GO", "desc")
 
   # Create GO package
-  GOdata<-data.frame(GO.id=blast2GOannot$GO, evidence.code=rep("ISA",dim(blast2GOannot)[1]), gene.id=as.character(blast2GOannot$Seq))
+  GOdata<-data.frame(GO.id = blast2GOannot$GO,
+                     evidence.code = rep("ISA", dim(blast2GOannot)[1]),
+                     gene.id = as.character(blast2GOannot$Seq))
   goFrame = GOFrame(GOdata, organism = organism)
   goAllFrame = GOAllFrame(goFrame)
 

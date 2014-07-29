@@ -2,7 +2,8 @@ Package: GOstatsPlus
 Title: GOstatsPlus
 Description: Convenience functions for the GOstats package
 Version: 0.1
-Authors: David Fredman (david.fredman@uib.no)
+Author: David Fredman <david.fredman@uib.no>
+Maintainer: David Fredman <david.fredman@uib.no>
 Depends:
     R (>= 3.0.2)
 Imports:

@@ -1,11 +1,7 @@
-#' @title significant_terms
+#' significant terms
 #'
-#' @description
-#' \code{significant_terms} extracts the significant GO terms from a GOstat
-#' results object
-#'
-#' @details
-#' Details of function go here
+#' Extract the significant GO terms from a GOstat results object
+
 significant_terms<-function(GO_OBJ, cutoff){
   terms_pvals = pvalues(GO_OBJ)
   return(terms_pvals[terms_pvals<cutoff])

@@ -1,0 +1,39 @@
+```{r}
+
+# get gene:go_id
+library(biomaRt)
+ensmart=useMart('ensembl', 'drerio_gene_ensembl')
+dat = getBM(attributes=c('go_id','ensembl_gene_id'),mart=ensmart)
+
+
+#get corresponding go_names for each gene
+library(GO.db)
+library(dplyr)
+
+report=filter(dat, !go_id == "") %>% # remove empty go_ids
+  mutate(name = Term(go_id)) %>%         # get corresponding GO term names bfrom GO.db y go_id
+  group_by(ensembl_gene_id) %>%          # sort by gene id
+  summarize(go_descriptions=do.call(paste, c(as.list(name), sep=","))) #concatenate GO names to one field
+
+write.table(report,file="geneId_goDescription.txt")
+
+#aggregate(apa['name'],by=list('gene_id'),FUN=c)
+
+desc = function(go_id,gene_id){
+  
+})
+
+---
+# if you are connecting to a mart that holds the go names in the db, eg the plant mart, you can
+#  skip using the GO.db package, and modify the second part (aggregation) as follows
+  
+ensmart=useMart('ENSEMBL_MART_PLANT', 'osativa_eg_gene')
+results <- getBM(attributes = c("ensembl_gene_id", "go_accession", "go_name_1006", "go_linkage_type"),
+                 mart=ensmart)
+
+report=filter(results, !go_accession == "") %>% # remove empty go_ids
+  group_by(ensembl_gene_id) %>%          # sort by gene id
+  summarize(go_accessions = do.call(paste, c(as.list(go_accession), sep=",")),
+            go_names = do.call(paste, c(as.list(go_name_1006), sep=","))) #concatenate GO names to one field
+
+head(report)
